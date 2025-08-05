@@ -1,0 +1,87 @@
+CREATE TABLE Artist (
+    ArtistId INTEGER PRIMARY KEY,
+    Name VARCHAR(120)
+);
+
+CREATE TABLE Album (
+    AlbumId INTEGER PRIMARY KEY,
+    Title VARCHAR(160),
+    ArtistId INTEGER REFERENCES Artist(ArtistId)
+);
+CREATE TABLE Customer (
+    CustomerId INTEGER PRIMARY KEY,
+    FirstName VARCHAR(40),
+    LastName VARCHAR(40),
+    Company VARCHAR(80),
+    Address VARCHAR(70),
+    City VARCHAR(40),
+    State VARCHAR(40),
+    Country VARCHAR(40),
+    PostalCode VARCHAR(10),
+    Phone VARCHAR(24),
+    Fax VARCHAR(24),
+    Email VARCHAR(60),
+    SupportRepId INTEGER
+);
+CREATE TABLE Employee (
+    EmployeeId INTEGER PRIMARY KEY,
+    LastName VARCHAR(20),
+    FirstName VARCHAR(20),
+    Title VARCHAR(30),
+    ReportsTo INTEGER,
+    Address VARCHAR(70),
+    City VARCHAR(40),
+    State VARCHAR(40),
+    Country VARCHAR(40),
+    PostalCode VARCHAR(10),
+    Phone VARCHAR(24),
+    Fax VARCHAR(24),
+    Email VARCHAR(60)
+);
+
+CREATE TABLE Genre (
+    GenreId INTEGER PRIMARY KEY,
+    Name VARCHAR(120)
+);
+CREATE TABLE Invoice (
+    InvoiceId INTEGER PRIMARY KEY,
+    CustomerId INTEGER,
+    BillingAddress VARCHAR(70),
+    BillingCity VARCHAR(40),
+    BillingState VARCHAR(40),
+    BillingCountry VARCHAR(40),
+    BillingPostalCode VARCHAR(10),
+    Total NUMERIC(10, 2)
+);
+CREATE TABLE InvoiceLine (
+    InvoiceLineId INTEGER PRIMARY KEY,
+    InvoiceId INTEGER,
+    TrackId INTEGER,
+    UnitPrice NUMERIC(10, 2),
+    Quantity INTEGER
+);
+CREATE TABLE MediaType (
+    MediaTypeId INTEGER PRIMARY KEY,
+    Name VARCHAR(120)
+);
+
+CREATE TABLE Playlist (
+    PlaylistId INTEGER PRIMARY KEY,
+    Name VARCHAR(120)
+);
+CREATE TABLE PlaylistTrack (
+    PlaylistId INTEGER,
+    TrackId INTEGER,
+    PRIMARY KEY (PlaylistId, TrackId)
+);
+CREATE TABLE Track (
+    TrackId INTEGER PRIMARY KEY,
+    Name VARCHAR(200),
+    AlbumId INTEGER,
+    MediaTypeId INTEGER,
+    GenreId INTEGER,
+    Composer VARCHAR(220),
+    Milliseconds INTEGER,
+    Bytes INTEGER,
+    UnitPrice NUMERIC(10, 2)
+);
