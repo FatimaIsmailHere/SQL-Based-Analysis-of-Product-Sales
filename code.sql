@@ -1,21 +1,19 @@
--- =========================================
--- 🎵 Chinook Music Store — Database Schema
--- =========================================
+Chinook Music Store — Database Schema
 
--- 🎨 Artists Table
+--  Artists Table
 CREATE TABLE Artist (
     ArtistId INTEGER PRIMARY KEY,
     Name VARCHAR(120)
 );
 
--- 💿 Albums Table
+--  Albums Table
 CREATE TABLE Album (
     AlbumId INTEGER PRIMARY KEY,
     Title VARCHAR(160),
     ArtistId INTEGER REFERENCES Artist(ArtistId)
 );
 
--- 👤 Customers Table
+--  Customers Table
 CREATE TABLE Customer (
     CustomerId INTEGER PRIMARY KEY,
     FirstName VARCHAR(40),
@@ -32,7 +30,7 @@ CREATE TABLE Customer (
     SupportRepId INTEGER REFERENCES Employee(EmployeeId)  
 );
 
--- 🧑‍💼 Employees Table
+-- Employees Table
 CREATE TABLE Employee (
     EmployeeId INTEGER PRIMARY KEY,
     LastName VARCHAR(20),
@@ -49,19 +47,19 @@ CREATE TABLE Employee (
     Email VARCHAR(60)
 );
 
--- 🎵 Genre Table
+--  Genre Table
 CREATE TABLE Genre (
     GenreId INTEGER PRIMARY KEY,
     Name VARCHAR(120)
 );
 
--- 📁 MediaType Table
+-- MediaType Table
 CREATE TABLE MediaType (
     MediaTypeId INTEGER PRIMARY KEY,
     Name VARCHAR(120)
 );
 
--- 🎼 Track Table (Main product catalog)
+--  Track Table (Main product catalog)
 CREATE TABLE Track (
     TrackId INTEGER PRIMARY KEY,
     Name VARCHAR(200),
@@ -74,7 +72,7 @@ CREATE TABLE Track (
     UnitPrice NUMERIC(10, 2)
 );
 
--- 🧾 Invoice Table
+--  Invoice Table
 CREATE TABLE Invoice (
     InvoiceId INTEGER PRIMARY KEY,
     CustomerId INTEGER REFERENCES Customer(CustomerId),
@@ -86,7 +84,7 @@ CREATE TABLE Invoice (
     Total NUMERIC(10, 2)
 );
 
--- 🧾 InvoiceLine Table (Line items)
+-- InvoiceLine Table (Line items)
 CREATE TABLE InvoiceLine (
     InvoiceLineId INTEGER PRIMARY KEY,
     InvoiceId INTEGER REFERENCES Invoice(InvoiceId),
@@ -95,34 +93,34 @@ CREATE TABLE InvoiceLine (
     Quantity INTEGER
 );
 
--- 🎶 Playlist Table
+--  Playlist Table
 CREATE TABLE Playlist (
     PlaylistId INTEGER PRIMARY KEY,
     Name VARCHAR(120)
 );
 
--- 🔗 PlaylistTrack Table (Many-to-Many: Playlists <-> Tracks)
+--  PlaylistTrack Table (Many-to-Many: Playlists <-> Tracks)
 CREATE TABLE PlaylistTrack (
     PlaylistId INTEGER REFERENCES Playlist(PlaylistId),
     TrackId INTEGER REFERENCES Track(TrackId),
     PRIMARY KEY (PlaylistId, TrackId)
 );
 
--- =====================================
--- 📊 Business Intelligence Queries
--- =====================================
 
--- 1. ✅ Total Revenue from All Invoices
+--  Business Intelligence Queries
+
+
+-- 1. Total Revenue from All Invoices
 SELECT SUM(Invoice.Total) AS TotalRevenue
 FROM Invoice;
 
--- 2. ✅ Revenue by Country
+-- 2. Revenue by Country
 SELECT Invoice.BillingCountry, SUM(Invoice.Total) AS Revenue
 FROM Invoice
 GROUP BY Invoice.BillingCountry
 ORDER BY Revenue DESC;
 
--- 3. ✅ Top 5 Customers by Revenue
+-- 3. Top 5 Customers by Revenue
 SELECT 
     Customer.FirstName || ' ' || Customer.LastName AS CustomerName, 
     SUM(Invoice.Total) AS Revenue
@@ -132,7 +130,7 @@ GROUP BY CustomerName
 ORDER BY Revenue DESC
 LIMIT 5;
 
--- 4. ✅ Top 10 Tracks by Revenue
+-- 4.  Top 10 Tracks by Revenue
 SELECT 
     Track.Name AS TrackName,
     SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity) AS TotalRevenue
@@ -142,7 +140,7 @@ GROUP BY Track.Name
 ORDER BY TotalRevenue DESC
 LIMIT 10;
 
--- 5. ✅ Albums with the Most Units Sold
+-- 5.  Albums with the Most Units Sold
 SELECT 
     Album.Title AS AlbumTitle,
     COUNT(InvoiceLine.InvoiceLineId) AS UnitsSold
@@ -153,7 +151,7 @@ GROUP BY Album.Title
 ORDER BY UnitsSold DESC
 LIMIT 10;
 
--- 6. ✅ Top-Selling Track per Genre using RANK()
+-- 6.  Top-Selling Track per Genre using RANK()
 SELECT *
 FROM (
     SELECT 
