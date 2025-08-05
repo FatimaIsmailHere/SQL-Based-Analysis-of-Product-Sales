@@ -85,3 +85,66 @@ CREATE TABLE Track (
     Bytes INTEGER,
     UnitPrice NUMERIC(10, 2)
 );
+
+
+SELECT SUM(Total) AS TotalRevenue
+FROM Invoice;
+SELECT BillingCountry, SUM(Total) AS Revenue
+FROM Invoice
+GROUP BY BillingCountry
+ORDER BY Revenue DESC;
+
+SELECT FirstName || ' ' || LastName AS CustomerName, SUM(Total) AS Revenue
+FROM Customer
+JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId
+GROUP BY CustomerName
+ORDER BY Revenue DESC
+LIMIT 5;
+
+SELECT 
+    Track.Name AS TrackName,
+    SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity) AS TotalRevenue
+FROM 
+    InvoiceLine
+JOIN 
+    Track ON InvoiceLine.TrackId = Track.TrackId
+GROUP BY 
+    Track.Name
+ORDER BY 
+    TotalRevenue DESC
+LIMIT 10;
+
+SELECT 
+    Album.Title AS AlbumTitle,
+    COUNT(InvoiceLine.InvoiceLineId) AS UnitsSold
+FROM 
+    InvoiceLine
+JOIN 
+    Track ON InvoiceLine.TrackId = Track.TrackId
+JOIN 
+    Album ON Track.AlbumId = Album.AlbumId
+GROUP BY 
+    Album.Title
+ORDER BY 
+    UnitsSold DESC
+LIMIT 10;
+SELECT *
+FROM (
+    SELECT 
+        Genre.Name AS GenreName,
+        Track.Name AS TrackName,
+        SUM(InvoiceLine.Quantity) AS UnitsSold,
+        RANK() OVER (
+            PARTITION BY Genre.Name 
+            ORDER BY SUM(InvoiceLine.Quantity) DESC
+        ) AS Rank
+    FROM 
+        InvoiceLine
+    JOIN 
+        Track ON InvoiceLine.TrackId = Track.TrackId
+    JOIN 
+        Genre ON Track.GenreId = Genre.GenreId
+    GROUP BY 
+        Genre.Name, Track.Name
+) AS ranked_tracks
+WHERE Rank = 1;
