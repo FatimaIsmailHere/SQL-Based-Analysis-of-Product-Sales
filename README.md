@@ -44,4 +44,4 @@ Aggregation (SUM, COUNT)
 Window Functions (RANK(), ROW_NUMBER())
 
 Created by Fatima Ismail
-Chinook-based music sales analysis project using SQL and PostgreSQL.
+
